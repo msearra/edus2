@@ -30,7 +30,7 @@ style "clearlooks-default"
   fg[SELECTED]      = "#E9E9E9" #?#E9E9E9
   fg[INSENSITIVE]   = "#757575" #CAN'T TOUCH DIS -[EDIT] I did (bvc)
 
-  bg[NORMAL]        = "#181818" #Backround
+  bg[NORMAL]        = "#000000" #Backround
   bg[PRELIGHT]      = "#121212" #Highlight Widget
   bg[ACTIVE]        = "#0A0A0A" #Selected Widget
   bg[SELECTED]      = "#30271c" #The box words are usually in @_@!

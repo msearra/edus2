@@ -20,35 +20,58 @@ pygtk.require( "2.0" )
 import gtk
 import sys
 import gobject
-import mplayer
 import os
 import subprocess
 import pickle
 import glob
-
+from omxplayer.player import OMXPlayer
+from pathlib import Path
+import serial
+import logging
 
 class Main:
 
-  # Variable to store RFID reader strings
+  # Gobal Variable to store RFID reader strings and bools
   dataString =""
+  addRfidTag = False
+  isProbeConnected = True
+
+  #Set debug logging parameters level = logging.DEBUG/ERROR/WARNING
+  logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
+ 
+  #Define serialport and parameters - aotumate later or add to setings
+  try:
+          ser = serial.Serial(
+          port = '/dev/ttyUSB0',
+          baudrate = 115200,
+          parity=serial.PARITY_NONE,
+          stopbits = serial.STOPBITS_ONE,
+          bytesize = serial.EIGHTBITS)
+  except:
+    isProbeConnected = False
+
+  #Add send command to device
+  # To do
 
   # After the combo boxes have been initialized we set them to have the same selected value
   # as during the last run
-  def load_settings( self, filename ):
-    try: 
+  def load_settings(self, filename):
+    try:
       pickle_file = open(filename,'rb')
       list_import = pickle.load(pickle_file)
       self.list_store1.clear()
-      for item in list_import:
-        self.list_store1.append(list(item))
+      for i in  range(len(list_import)):
+        logging.debug("item " + str(list_import[i]))
+        self.list_store1.append(list_import[i])
       pickle_file.close()
-    except:
-      print "No pickle file available"
+    except Exception as e:
+      logging.debug(e)      
 
   # Pickle the settings data for use in the next run
   def save_settings( self, filename ):
     pickle_file = open(filename,'wb')
-    list_iter = self.list_store1.get_iter_root() 
+    list_iter = self.list_store1.get_iter_root()
     list_dump = []
     while(list_iter):
       tup = self.list_store1.get(list_iter,0,1,2)
@@ -57,41 +80,12 @@ class Main:
     pickle.dump(list_dump,pickle_file)
     pickle_file.close()
 
-  def progress_bar_updater(self, timer):
-    # Check for an open file first
-    progressBar = self.builder.get_object("progressbar")
-    if ( self.mp.filename == None):
-      progress = 0
-      progressBar.set_text("")
-      progressBar.update(0)
-      return True
-    #timeData = self.builder.get_object("time_label")
-    #length = self.mp.length
-    #timepos = self.mp.time_pos
-    # This part updates the progress bas
-    progress = self.mp.percent_pos
-    if progress != None:
-      # +1 because progress starts from 0, it would end to 99 otherwise
-      progressBar.set_text("%s %%" % progress)
-      progressBar.update(progress/100.0)
-    #  timeData.set_text(str(timepos) + "/" + str(length))
-    else:
-      progress = 0
-      progressBar.set_text("")
-      progressBar.update(0)
-      #timeData.set_text("0.00/0.00")
-    # Need to return true to reset the timer
-    return True
-
   def gtk_main_quit( self, window ):
     self.save_settings(sys.path[0] + "/settings.p")
-    self.mp.quit()
     gtk.main_quit()
 
   def cb_quit(self, window, event):
-    print "cb_quit"
     self.save_settings(sys.path[0] + "/settings.p")
-    self.mp.quit()
     gtk.main_quit()
 
   def cb_about_press( self, window ):
@@ -100,14 +94,29 @@ class Main:
     return response != 1
 
   def cb_settings_press( self, window ):
+    self.set_add_rfid_tag_active(True)
     response = self.settings_dialog.run()
     self.settings_dialog.hide()
+    if response == gtk.RESPONSE_DELETE_EVENT:
+      self.set_add_rfid_tag_active(False)
+##      logging.debug("close event on settings press")
     return response != 1
 
   def cb_add_scan_press( self, window ):
     response        = self.add_scan_dialog.run()
     self.add_scan_dialog.hide()
     return response != 1
+  
+  def settings_cancel_clicked(self, window ):
+    self.set_add_rfid_tag_active(False)
+    logging.debug("Set tag false on settings exit")
+
+  def cb_add_scan_apply_clicked( self, window ):
+    new_name          = self.name_entry.get_text()
+    new_rfid              = self.rfid_entry.get_text()
+    new_filename     = self.filechooser.get_filename()
+    self.list_store1.append([new_name, new_rfid, new_filename])
+    return True
 
   # Callback to run when load settings button is pressed
   # Will open a window, prompt for files and update the filename variable
@@ -158,82 +167,61 @@ class Main:
     self.quick_add_item.hide()
     return True
 
-
-  def cb_add_scan_apply_clicked( self, window ):
-    new_name        = self.name_entry.get_text()
-    new_rfid        = self.rfid_entry.get_text()
-    new_filename    = self.filechooser.get_filename()
-    self.list_store1.append([new_name, new_rfid, new_filename])
-    return True
-    
-
   def cb_remove_scan_press( self, button ):
     # Obtain selection
     sel = self.tree.get_selection()
-             
+
     # If nothing is selected, return.
     if sel.count_selected_rows == 0:
       return
 
     # Get selected path
-    ( model, rows ) = sel.get_selected_rows()
-
+    (model, rows) = sel.get_selected_rows()
     for row in reversed(rows):
       iter1 = model.get_iter( row )
       model.remove(iter1)
-
     return
 
+  #Messenger dialog box for serial probe not connected
+  def message_dialog_show( self, message):
+      self.message_dialog.set_property("text",message)
+      response = self.message_dialog.run()
+      self.message_dialog.hide()
+    
   def on_key_press_event(self, widget, event):
+   try:
     keyname = gtk.gdk.keyval_name(event.keyval)
     # Grab the letter q to stop the current movie
     if keyname == 'q' or keyname == 'Q':
-      self.mp.stop()
+      if(self.check_active_player()):
+         self.player.quit()
     #Pause on spacebar
     if keyname == 'space':
-      self.mp.pause()
-    #Strings from the reader end witha new line... so we take in all characters and process the last 10 on a newline
+      self.player.play_pause()
+    #Strings from the reader end with a new line... so we take in all characters and process the last 10 on a newline
     if keyname == 'Return':
       rfid_string_scanned = self.dataString[-10::]
       self.dataString = '';
-
-      # This code aims to check if the file is already playing so we don't continually start
-      # the movie over if we are on the border of one of the tags
-      # Need to check this sometimes, so always call it
-      current_file = self.mp.filename
-      #Search for the matching rfid string and play the associated file
-      # Get the tree to iterate over
-      list_iter = self.list_store1.get_iter_root() 
-      while(list_iter):
-        rfid_entry  = self.list_store1.get_value(list_iter, 1)
-        rfid_entry = rfid_entry.strip()
-        if rfid_entry == rfid_string_scanned:
-          filename  = self.list_store1.get_value(list_iter, 2)
-          # If we are not playing a video start the one requested
-          if current_file == None:
-            self.play_video(filename)
-            return filename
-          # If this filename doesn't match the current playing one, fire it up
-          elif filename.find(current_file) == -1:
-            self.play_video(filename)
-            return filename
-          else:
-            print "Not playing %s because it is already playing" % filename
-            return None
-        list_iter   = self.list_store1.iter_next(list_iter)
-      print "ID %s is not in the list." % rfid_string_scanned
-        
-
-    else:
-      self.dataString += keyname
-      self.dataString = self.dataString[-10::]
-      return None
+   except Exception as e: print(e)
 
 
-  # Play video 
+  # Play video
   def play_video( self, filename):
-    print "Playing " + filename
-    self.mp.loadfile("'" + filename + "'")
+         if self.check_active_player():
+            self.player.quit()
+         print "Playing " + filename
+         VIDEO_PATH = Path("" + filename + "")
+         self.player = OMXPlayer(VIDEO_PATH,args=['-b'])
+
+   # Catch exception if process is not running when checking activity
+  def check_active_player(self):
+    try:
+         playerStatus = self.player.playback_status()
+         if playerStatus == 'Playing' or playerStatus =='Paused':
+            return True          
+    except:
+         return False
+         print "Exception thrown on inactive player"
 
   # Callback for radio button
   def toggle_fs(self,widget,data=None):
@@ -243,12 +231,90 @@ class Main:
     else:
       self.mainWindow.unfullscreen()
 
+  def listen_serial(self):
+    try:
+         if(self.ser.inWaiting() > 0):
+            s =''
+            s += self.ser.read(16)
+            self.ser.flushInput()
+            self.dataString = s
+            if(self.addRfidTag):
+               self.handle_rfid_tag_text()
+               return True
+            else:
+               self.handle_video_playing()
+               logging.debug(self.dataString )
+               return True
+         else:
+            if self.check_active_player():
+               self.player.quit()
+            logging.debug("No Tag in Range")
+            return True
+    except Exception as e:
+         logging.debug(e)
+         self.message_dialog_show("The probe has been disconnected please plug it back into the Pi and restart the application.")
 
-  def __init__( self ):
+
+  # Serial rfid tag to gui
+  def handle_rfid_tag_text(self):
+            rfid_string_scanned = self.dataString.strip()
+            logging.debug(rfid_string_scanned)
+            #Setting both add quick and add normal RFID fields to current read tag
+            self.rfid_entry.set_text(rfid_string_scanned)
+            self.rfid_quick_entry.set_text(rfid_string_scanned)
+            self.dataString = ''
+            
+  # Continuously read rfid tags
+  def handle_video_playing(self):
+            logging.debug("read rfid for video playing")
+            rfid_string_scanned = self.dataString.strip()
+            logging.debug(rfid_string_scanned)
+            self.dataString = ''
+
+            # This code aims to check if the file is already playing so we don't continually start
+            # the movie over if we are on the border of one of the tags
+            # Need to check this sometimes, so always call it
+
+            if self.check_active_player():              
+              current_file = str(self.player.get_filename())
+            else:
+              current_file = None
+            #Search for the matching rfid string and play the associated file
+            # Get the tree to iterate over
+            list_iter = self.list_store1.get_iter_root()
+            while(list_iter):
+              rfid_entry  = self.list_store1.get_value(list_iter, 1)
+              rfid_entry = rfid_entry.strip()
+              if rfid_entry == rfid_string_scanned:
+                filename  = self.list_store1.get_value(list_iter, 2)
+                # If we are not playing a video start the one requested
+                if current_file == None:
+                  self.play_video(filename)
+                  return filename
+                # If this filename doesn't match the current playing one, fire it up
+                elif filename.find(current_file) == -1:
+                  self.play_video(filename)
+                  return filename
+                else:
+                  logging.debug("Not playing %s because it is already playing" % filename)
+                  return True
+              list_iter   = self.list_store1.iter_next(list_iter)
+            logging.debug("Tag not stored in settings file yet!!")
+           # return True
+
+  #Flag for scanning to play video or read tag into gui textbox    
+  def set_add_rfid_tag_active(self,flag = False):    
+    self.addRfidTag = flag
+    logging.debug("add rfid status flag " + str(self.addRfidTag))
+      
+
+  def __init__( self ):    
+
+    #Glade compomnents intialise
     self.builder = gtk.Builder()
     self.builder.add_from_file(sys.path[0] + "/EDUS2.glade")
-    # Add a timer and a function to update the progress bar
-    self.timer = gobject.timeout_add (200, self.progress_bar_updater, self)
+    #Interval timer to loop listen_serial while return is true
+    self.timer = gtk.timeout_add(200, self.listen_serial)
 
     self.window           = self.builder.get_object( "window1" )
     self.settings_dialog  = self.builder.get_object( "settings_dialog" )
@@ -266,19 +332,10 @@ class Main:
     self.filechooser_quick      = self.builder.get_object( "filechooserbutton_quick" )
     self.load_settings_filechooserdialog = self.builder.get_object("load_settings_filechooserdialog")
     self.save_settings_filechooserdialog = self.builder.get_object("save_settings_filechooserdialog")
-
+    self.message_dialog = self.builder.get_object("message_dialog")
 
     self.load_settings(sys.path[0] + "/settings.p")
-
     self.builder.connect_signals( self )
-
-    # Start mplayer up
-    self.drawingarea = self.builder.get_object("drawingarea1")
-    self.drawingarea.set_size_request(640,480)
-    self.drawingarea.realize()
-    xid = self.drawingarea.window.xid
-    errorLog = open("mplayer.log", 'w')
-    self.mp = mplayer.Player("-vo x11 -zoom -wid %i" % (xid), stderr=errorLog)
 
     # Set up treeView to allow multiple item selection for better delete
     self.tree.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
@@ -289,7 +346,15 @@ class Main:
     self.window.show_all()
     self.mainWindow.fullscreen()
 
+    #Check if theres an exception on opening the serial port
+    if self.isProbeConnected == False:
+      self.message_dialog_show("Please make sure the probe is connected to the Pi!!")
+
+
 if __name__ == "__main__":
   win = Main()
   win.window.show_all()
+
   gtk.main()
+
+

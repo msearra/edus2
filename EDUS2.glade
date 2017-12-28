@@ -7,7 +7,7 @@
     <property name="border_width">5</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">EDUS2</property>
-    <property name="version">2.0</property>
+    <property name="version">2.1</property>
     <property name="copyright" translatable="yes">Copyright (c) 2011-2016 Paul Kulyk, Paul Olszynski
 </property>
     <property name="comments" translatable="yes">EDUS2 is an emergency department ultrasound simulator.  
@@ -39,9 +39,308 @@ It provides a simple interface for playing EDUS video using an RFID reader as a 
       </object>
     </child>
   </object>
+  <object class="GtkFileChooserDialog" id="load_settings_filechooserdialog">
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">Choose a settings file to open....</property>
+    <property name="role">GtkFileChooserDialog</property>
+    <property name="type_hint">dialog</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="load_settings_dialogbox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="load_Settings-dialog-action_area6">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="ok_load_settings_button">
+                <property name="label">gtk-ok</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="cancel_load_settings_button">
+                <property name="label">gtk-cancel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="1">ok_load_settings_button</action-widget>
+      <action-widget response="0">cancel_load_settings_button</action-widget>
+    </action-widgets>
+  </object>
+  <object class="GtkMessageDialog" id="message_dialog">
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="modal">True</property>
+    <property name="default_width">400</property>
+    <property name="default_height">115</property>
+    <property name="type_hint">dialog</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="message_type">warning</property>
+    <property name="buttons">ok</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkDialog" id="quick_add_item">
+    <property name="can_focus">True</property>
+    <property name="has_focus">True</property>
+    <property name="border_width">5</property>
+    <property name="modal">True</property>
+    <property name="window_position">center</property>
+    <property name="default_width">600</property>
+    <property name="default_height">600</property>
+    <property name="type_hint">dialog</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox6">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="spacing">2</property>
+        <child>
+          <object class="GtkLabel" id="scan_a_tag_label">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Scan a tag to continue. Click Done to stop the process. Click forward to skip tagging this file and move to the next file in the list.</property>
+            <property name="wrap">True</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area6">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="quick_add_item_forward_button">
+                <property name="label">gtk-media-forward</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="quick_add_item_apply_button">
+                <property name="label">gtk-apply</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="has_default">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <property name="xalign">0.37999999523162842</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="pack_type">end</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="quick_add_item_cancel_button">
+                <property name="label">Done</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="padding">1</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="quick_add_cur_filename">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">No File Selected</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="rfid_quick_entry">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="has_focus">True</property>
+            <property name="invisible_char">●</property>
+            <property name="activates_default">True</property>
+            <property name="primary_icon_activatable">False</property>
+            <property name="secondary_icon_activatable">False</property>
+            <property name="primary_icon_sensitive">True</property>
+            <property name="secondary_icon_sensitive">True</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">quick_add_item_forward_button</action-widget>
+      <action-widget response="2">quick_add_item_cancel_button</action-widget>
+      <action-widget response="1">quick_add_item_apply_button</action-widget>
+    </action-widgets>
+  </object>
+  <object class="GtkFileChooserDialog" id="save_settings_filechooserdialog">
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">Choose a settings file to save....</property>
+    <property name="role">GtkFileChooserDialog</property>
+    <property name="type_hint">dialog</property>
+    <property name="action">save</property>
+    <property name="do_overwrite_confirmation">True</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox8">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area8">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="ok_save_settings_button">
+                <property name="label">gtk-ok</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="cancel_save_settings_button">
+                <property name="label">gtk-cancel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="1">ok_save_settings_button</action-widget>
+      <action-widget response="0">cancel_save_settings_button</action-widget>
+    </action-widgets>
+  </object>
+  <object class="GtkTextBuffer" id="textbuffer1">
+    <property name="text" translatable="yes">To enter a new scan give it a unique name in the "Name" field.  This doesn't do anything special, it is simply so the user can identify which scans are which.
+
+Next, scan a tag with the RFID probe plugged in.  If this isn't working you better contact me at paul.kulyk@usask.ca.  If you want to have more than one tag have the same scan, by all means add another entry by clicking the plus button again.  That way when either of the tags is scanned the same video will be played.  This could be useful if you want a larger surface area to be scannable.
+
+Finally, click the filename button to browse the directory structure for a new scan.  A USB key inserted with new scans should be pop up.  These can be dragged to whatever directory you would like.  An appropriate one would be /home/edeuser/Documents/EDEScans/
+
+Now click done, go to the main window and start teaching students how to interpret EDE scans.</property>
+  </object>
   <object class="GtkDialog" id="add_scan_dialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
+    <property name="modal">True</property>
+    <property name="window_position">center</property>
+    <property name="default_width">600</property>
+    <property name="default_height">600</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox4">
@@ -166,7 +465,7 @@ It provides a simple interface for playing EDUS video using an RFID reader as a 
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">●</property>
-                <property name="text" translatable="yes">3bde39abb</property>
+                <property name="text" translatable="yes">Scan RFID TAG</property>
                 <property name="primary_icon_activatable">False</property>
                 <property name="secondary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">True</property>
@@ -245,71 +544,16 @@ It provides a simple interface for playing EDUS video using an RFID reader as a 
       <action-widget response="0">button7</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkFileChooserDialog" id="load_settings_filechooserdialog">
-    <property name="can_focus">False</property>
-    <property name="border_width">5</property>
-    <property name="title" translatable="yes">Choose a settings file to open....</property>
-    <property name="role">GtkFileChooserDialog</property>
-    <property name="type_hint">dialog</property>
-    <child internal-child="vbox">
-      <object class="GtkVBox" id="load_settings_dialogbox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="load_Settings-dialog-action_area6">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
-            <child>
-              <object class="GtkButton" id="ok_load_settings_button">
-                <property name="label">gtk-ok</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="cancel_load_settings_button">
-                <property name="label">gtk-cancel</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="pack_type">end</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-      </object>
-    </child>
-    <action-widgets>
-      <action-widget response="1">ok_load_settings_button</action-widget>
-      <action-widget response="0">cancel_load_settings_button</action-widget>
-    </action-widgets>
+  <object class="GtkTextBuffer" id="textbuffer2">
+    <property name="text" translatable="yes">Click the file browser below to pick the desired directory. Every video in that directory will be displayed to allow for an RFID Tag to be scanned to the corresponding video. Skip unwanted files by using the forward button. </property>
   </object>
   <object class="GtkDialog" id="quick_add_dialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
+    <property name="modal">True</property>
+    <property name="window_position">center</property>
+    <property name="default_width">600</property>
+    <property name="default_height">600</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox5">
@@ -320,13 +564,15 @@ It provides a simple interface for playing EDUS video using an RFID reader as a 
           <object class="GtkLabel" id="quick_add_heading_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Quick Add</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="label" translatable="yes">Directory Scan and Quick Add</property>
             <attributes>
               <attribute name="scale" value="1.5"/>
             </attributes>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
@@ -374,21 +620,22 @@ It provides a simple interface for playing EDUS video using an RFID reader as a 
           </packing>
         </child>
         <child>
-          <object class="GtkScrolledWindow" id="scrolledwindow3">
+          <object class="GtkTextView" id="textview2">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <child>
-              <object class="GtkTextView" id="textview2">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="wrap_mode">word</property>
-                <property name="buffer">textbuffer2</property>
-              </object>
-            </child>
+            <property name="pixels_above_lines">10</property>
+            <property name="pixels_below_lines">10</property>
+            <property name="editable">False</property>
+            <property name="wrap_mode">word-char</property>
+            <property name="left_margin">10</property>
+            <property name="right_margin">10</property>
+            <property name="cursor_visible">False</property>
+            <property name="buffer">textbuffer2</property>
           </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
+            <property name="padding">10</property>
             <property name="position">2</property>
           </packing>
         </child>
@@ -396,11 +643,12 @@ It provides a simple interface for playing EDUS video using an RFID reader as a 
           <object class="GtkFileChooserButton" id="filechooserbutton_quick">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="spacing">1</property>
             <property name="action">select-folder</property>
           </object>
           <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
             <property name="position">3</property>
           </packing>
         </child>
@@ -411,203 +659,178 @@ It provides a simple interface for playing EDUS video using an RFID reader as a 
       <action-widget response="0">quick_add_cancel_button</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkDialog" id="quick_add_item">
-    <property name="can_focus">True</property>
-    <property name="has_focus">True</property>
-    <property name="border_width">5</property>
-    <property name="type_hint">dialog</property>
-    <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox6">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="spacing">2</property>
-        <child>
-          <object class="GtkLabel" id="scan_a_tag_label">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Scan a tag to continue.
-Click cancel to stop the process.
-Click forward to skip tagging this file and move to the next file in the list.</property>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="quick_add_cur_filename">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">label</property>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="rfid_quick_entry">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="has_focus">True</property>
-            <property name="invisible_char">●</property>
-            <property name="activates_default">True</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
-            <property name="primary_icon_sensitive">True</property>
-            <property name="secondary_icon_sensitive">True</property>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area6">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
-            <child>
-              <object class="GtkButton" id="quick_add_item_apply_button">
-                <property name="label">gtk-apply</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="has_default">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <property name="xalign">0.37999999523162842</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="quick_add_item_cancel_button">
-                <property name="label">gtk-cancel</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_stock">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="quick_add_item_forward_button">
-                <property name="label">gtk-media-forward</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="pack_type">end</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-    <action-widgets>
-      <action-widget response="1">quick_add_item_apply_button</action-widget>
-      <action-widget response="2">quick_add_item_cancel_button</action-widget>
-      <action-widget response="0">quick_add_item_forward_button</action-widget>
-    </action-widgets>
+  <object class="GtkListStore" id="treeview">
+    <columns>
+      <!-- column-name gchararray1 -->
+      <column type="gchararray"/>
+      <!-- column-name gchararray2 -->
+      <column type="gchararray"/>
+      <!-- column-name gchararray3 -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">12</col>
+        <col id="1" translatable="yes">23</col>
+        <col id="2" translatable="yes"/>
+      </row>
+    </data>
   </object>
-  <object class="GtkFileChooserDialog" id="save_settings_filechooserdialog">
+  <object class="GtkWindow" id="window1">
+    <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="border_width">5</property>
-    <property name="title" translatable="yes">Choose a settings file to save....</property>
-    <property name="role">GtkFileChooserDialog</property>
-    <property name="type_hint">dialog</property>
-    <property name="action">save</property>
-    <property name="do_overwrite_confirmation">True</property>
-    <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox8">
+    <property name="title" translatable="yes">Edus2 Vancouver Coastal Health</property>
+    <signal name="destroy" handler="gtk_main_quit" swapped="no"/>
+    <child>
+      <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area8">
+        <child>
+          <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="ok_save_settings_button">
-                <property name="label">gtk-ok</property>
+              <object class="GtkAspectFrame" id="aspectframe1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
+                <property name="can_focus">False</property>
+                <property name="label_xalign">0</property>
+                <property name="shadow_type">none</property>
+                <child>
+                  <object class="GtkDrawingArea" id="drawingarea1">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="cancel_save_settings_button">
-                <property name="label">gtk-cancel</property>
+              <object class="GtkVBox" id="vbox2">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkLabel" id="label9">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xpad">6</property>
+                    <property name="ypad">3</property>
+                    <property name="label" translatable="yes">Edus2 Pi</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                      <attribute name="weight" value="ultrabold"/>
+                      <attribute name="scale" value="2"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <object class="GtkVBox" id="vbox4">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="homogeneous">True</property>
+                    <child>
+                      <object class="GtkButton" id="Exit">
+                        <property name="label">Quit</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="gtk_main_quit" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="About">
+                        <property name="label" translatable="yes">About</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="cb_about_press" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="Settings">
+                        <property name="label" translatable="yes">Settings</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="cb_settings_press" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkToggleButton" id="fs_togglebutton">
+                        <property name="label" translatable="yes">Fullscreen</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">True</property>
+                        <signal name="toggled" handler="toggle_fs" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="pack_type">end</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="padding">5</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
             <property name="position">0</property>
           </packing>
         </child>
-        <child>
-          <placeholder/>
-        </child>
       </object>
     </child>
-    <action-widgets>
-      <action-widget response="1">ok_save_settings_button</action-widget>
-      <action-widget response="0">cancel_save_settings_button</action-widget>
-    </action-widgets>
-  </object>
-  <object class="GtkTextBuffer" id="textbuffer1">
-    <property name="text" translatable="yes">To enter a new scan give it a unique name in the "Name" field.  This doesn't do anything special, it is simply so the user can identify which scans are which.
-
-Next, scan a tag with the RFID probe plugged in.  If this isn't working you better contact me at paul.kulyk@usask.ca.  If you want to have more than one tag have the same scan, by all means add another entry by clicking the plus button again.  That way when either of the tags is scanned the same video will be played.  This could be useful if you want a larger surface area to be scannable.
-
-Finally, click the filename button to browse the directory structure for a new scan.  A USB key inserted with new scans should be pop up.  These can be dragged to whatever directory you would like.  An appropriate one would be /home/edeuser/Documents/EDEScans/
-
-Now click done, go to the main window and start teaching students how to interpret EDE scans.</property>
   </object>
   <object class="GtkDialog" id="settings_dialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
     <property name="modal">True</property>
+    <property name="window_position">center-always</property>
     <property name="default_width">600</property>
     <property name="default_height">600</property>
     <property name="type_hint">dialog</property>
@@ -642,10 +865,10 @@ Now click done, go to the main window and start teaching students how to interpr
                 <property name="model">treeview</property>
                 <property name="headers_clickable">False</property>
                 <property name="reorderable">True</property>
-                <property name="search_column">0</property>
                 <property name="rubber_banding">True</property>
                 <property name="enable_grid_lines">both</property>
                 <property name="enable_tree_lines">True</property>
+                <property name="tooltip_column">6</property>
                 <child>
                   <object class="GtkTreeViewColumn" id="name_col">
                     <property name="title" translatable="yes">Name</property>
@@ -670,7 +893,7 @@ Now click done, go to the main window and start teaching students how to interpr
                 </child>
                 <child>
                   <object class="GtkTreeViewColumn" id="file_col">
-                    <property name="title" translatable="yes">Filename</property>
+                    <property name="title" translatable="yes">File Name </property>
                     <child>
                       <object class="GtkCellRendererText" id="filecell"/>
                       <attributes>
@@ -700,6 +923,7 @@ Now click done, go to the main window and start teaching students how to interpr
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="settings_cancel_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -806,207 +1030,5 @@ Now click done, go to the main window and start teaching students how to interpr
     <action-widgets>
       <action-widget response="1">button1</action-widget>
     </action-widgets>
-  </object>
-  <object class="GtkTextBuffer" id="textbuffer2">
-    <property name="text" translatable="yes">Select a directory.  Every video in that directory will be added to your list.</property>
-  </object>
-  <object class="GtkListStore" id="treeview">
-    <columns>
-      <!-- column-name Name -->
-      <column type="gchararray"/>
-      <!-- column-name RFID -->
-      <column type="gchararray"/>
-      <!-- column-name Filename -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">AAA</col>
-        <col id="1" translatable="yes">deadbeef99</col>
-        <col id="2" translatable="yes">./data/aaa_neg.mp4</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkWindow" id="window1">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="title" translatable="yes">EDUS Simulator</property>
-    <signal name="destroy" handler="gtk_main_quit" swapped="no"/>
-    <child>
-      <object class="GtkVBox" id="vbox1">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <child>
-          <object class="GtkHBox" id="hbox1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <child>
-              <object class="GtkAspectFrame" id="aspectframe1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label_xalign">0</property>
-                <property name="shadow_type">none</property>
-                <child>
-                  <object class="GtkDrawingArea" id="drawingarea1">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkVBox" id="vbox2">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkLabel" id="label9">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="xpad">6</property>
-                    <property name="ypad">3</property>
-                    <property name="label" translatable="yes">EDUS Simulator</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                      <attribute name="weight" value="ultrabold"/>
-                      <attribute name="scale" value="2"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <object class="GtkVBox" id="vbox5">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkLabel" id="label8">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Playback position</property>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <object class="GtkProgressBar" id="progressbar">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkVBox" id="vbox4">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkButton" id="button3">
-                        <property name="label" translatable="yes">About</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">True</property>
-                        <signal name="clicked" handler="cb_about_press" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="Exit">
-                        <property name="label">Quit</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">True</property>
-                        <signal name="clicked" handler="gtk_main_quit" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="pack_type">end</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="Settings">
-                        <property name="label" translatable="yes">Settings</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">True</property>
-                        <signal name="clicked" handler="cb_settings_press" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="pack_type">end</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkToggleButton" id="fs_togglebutton">
-                        <property name="label" translatable="yes">Fullscreen</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">True</property>
-                        <signal name="toggled" handler="toggle_fs" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">3</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="pack_type">end</property>
-                    <property name="position">3</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-      </object>
-    </child>
   </object>
 </interface>
