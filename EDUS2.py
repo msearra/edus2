@@ -34,7 +34,7 @@ class Main:
   # Gobal Variable to store RFID reader strings and bools
   dataString =""
   addRfidTag = False
-  isProbeConnected = True
+
 
   #Set debug logging parameters level = logging.DEBUG/ERROR/WARNING
   logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -42,15 +42,14 @@ class Main:
  
   #Define serialport and parameters - aotumate later or add to setings
   try:
-          ser = serial.Serial(
+          ultrasoundProbe = serial.Serial(
           port = '/dev/ttyUSB0',
           baudrate = 115200,
           parity=serial.PARITY_NONE,
           stopbits = serial.STOPBITS_ONE,
           bytesize = serial.EIGHTBITS)
-  except:
-    isProbeConnected = False
-
+  except Exception as e:
+    logging.debug(e)
   #Add send command to device
   # To do
 
@@ -99,7 +98,7 @@ class Main:
     self.settings_dialog.hide()
     if response == gtk.RESPONSE_DELETE_EVENT:
       self.set_add_rfid_tag_active(False)
-##      logging.debug("close event on settings press")
+      logging.debug("close event on settings press")
     return response != 1
 
   def cb_add_scan_press( self, window ):
@@ -182,7 +181,7 @@ class Main:
       model.remove(iter1)
     return
 
-  #Messenger dialog box for serial probe not connected
+  #Messenger dialog box
   def message_dialog_show( self, message):
       self.message_dialog.set_property("text",message)
       response = self.message_dialog.run()
@@ -212,6 +211,8 @@ class Main:
          print "Playing " + filename
          VIDEO_PATH = Path("" + filename + "")
          self.player = OMXPlayer(VIDEO_PATH,args=['-b'])
+         
+           
 
    # Catch exception if process is not running when checking activity
   def check_active_player(self):
@@ -225,7 +226,7 @@ class Main:
 
   # Callback for radio button
   def toggle_fs(self,widget,data=None):
-    print "Fullscreen %s" % (("OFF", "ON")[widget.get_active()])
+    logging.debug("Fullscreen %s" % (("OFF", "ON")[widget.get_active()]))
     if widget.get_active():
       self.mainWindow.fullscreen()
     else:
@@ -233,10 +234,10 @@ class Main:
 
   def listen_serial(self):
     try:
-         if(self.ser.inWaiting() > 0):
+         if(self.ultrasoundProbe.inWaiting() > 0):
             s =''
-            s += self.ser.read(16)
-            self.ser.flushInput()
+            s += self.ultrasoundProbe.read(16)
+            self.ultrasoundProbe.flushInput()
             self.dataString = s
             if(self.addRfidTag):
                self.handle_rfid_tag_text()
@@ -252,7 +253,7 @@ class Main:
             return True
     except Exception as e:
          logging.debug(e)
-         self.message_dialog_show("The probe has been disconnected please plug it back into the Pi and restart the application.")
+         self.message_dialog_show(e)
 
 
   # Serial rfid tag to gui
@@ -346,9 +347,6 @@ class Main:
     self.window.show_all()
     self.mainWindow.fullscreen()
 
-    #Check if theres an exception on opening the serial port
-    if self.isProbeConnected == False:
-      self.message_dialog_show("Please make sure the probe is connected to the Pi!!")
 
 
 if __name__ == "__main__":
